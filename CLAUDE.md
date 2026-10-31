@@ -15,8 +15,10 @@ Research Projects*), graded out of 100 + 10 bonus:
 
 The practical project is **quakeloc**: earthquake detection (STA/LTA), onset picking
 (AIC) and epicentre location (Geiger / Levenberg–Marquardt with 95 % error ellipses) for
-the northern Tien Shan (Almaty region), served by FastAPI, built with Docker, CI/CD in
-Jenkins, deployed to Minikube.
+the northern Tien Shan, served by FastAPI, built with Docker, CI/CD in Jenkins, deployed
+to Minikube. Real data comes from the KNET network around **Bishkek (~190 km WSW of
+Almaty)** — Almaty is the regional motivation only; never describe the real-data results
+as "Almaty region".
 
 **The design spec is the source of truth:** `docs/design/quakeloc-design.md`.
 Read it before changing anything.
@@ -55,7 +57,7 @@ Read it before changing anything.
 |---|---|
 | Assignment analysed, project chosen (multi-agent idea selection) | done |
 | `main` created as default branch | done |
-| Design spec `docs/design/quakeloc-design.md` | draft — awaiting student review |
+| Design spec `docs/design/quakeloc-design.md` | rev 2 (independent 4-lens review, 34 verified fixes applied) — awaiting student review |
 | Implementation plan | not started (after spec approval) |
 | Python package + tests | not started |
 | Dockerfile / Jenkins (JCasC) / k8s manifests / Makefile | not started |
@@ -83,12 +85,17 @@ GitHub. Consequences:
    `docker build` works.
 4. The Docker daemon is not running by default in the cloud: start it with
    `dockerd > /tmp/dockerd.log 2>&1 &`.
-5. `get.jenkins.io` is blocked; the Jenkins *image* pulls fine from Docker Hub, but
-   plugin downloads (updates.jenkins.io) may be blocked — Jenkins may only be fully
-   testable on the Mac.
+5. `get.jenkins.io` is blocked; the Jenkins *image* (`jenkins/jenkins:2.580.2-lts-jdk21`,
+   multi-arch) pulls fine from Docker Hub, but plugin downloads (updates.jenkins.io) may be
+   blocked — Jenkins may only be fully testable on the Mac. Do not use `lts-jdk17`
+   (frozen at 2.541.3, Java 17 end-of-life).
 6. ObsPy: use **1.5.1** (1.4.1 fails on Python 3.12 without `pkg_resources`). Verified
-   working with numpy 2.5 in `python:3.12-slim`; it maps `EARTHSCOPE` →
-   `https://service.earthscope.org`.
+   working with numpy 2.5 in `python:3.12-slim` **on amd64 only**; it maps `EARTHSCOPE` →
+   `https://service.earthscope.org`. There is **no linux/arm64 wheel**, so on Apple
+   Silicon the `data` Docker target compiles it from source and needs `gcc libc6-dev`
+   (already in the spec); a native macOS venv also works (arm64 macOS wheel exists).
+7. The cloud is amd64; the Mac may be arm64. Anything architecture-specific (the `data`
+   image, kubectl download in the Jenkins image) is only proven on the Mac.
 
 ## Conventions
 

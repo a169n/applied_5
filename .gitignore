@@ -12,12 +12,23 @@ dist/
 .ruff_cache/
 .hypothesis/
 .coverage
+.coverage.*
 coverage.xml
 htmlcov/
 
-# Build outputs
-artifacts/
-reports/
+# Build outputs (anchored to the repo root so docs/reports/ is NOT ignored)
+/artifacts/
+/reports/
+*.tar.gz
+
+# Secrets and generated credentials — never commit
+.env
+*.env
+!.env.example
+jenkins/secrets/*
+!jenkins/secrets/README.md
+jenkins/kubeconfig
+*.kubeconfig
 
 # OS / editor
 .DS_Store

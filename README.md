@@ -1,6 +1,7 @@
 # quakeloc
 
-Earthquake detection and location service for the northern Tien Shan (Almaty region).
+Earthquake detection and location service for the northern Tien Shan (validated on the
+open KNET network near Bishkek, ~190 km WSW of Almaty).
 
 A small research-software project built for *Assignment 5 — DevOps and CI/CD:
 Automating Processes for Research Projects*. It detects P-wave arrivals (STA/LTA),

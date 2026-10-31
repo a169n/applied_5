@@ -123,11 +123,18 @@ When continuing locally, open a terminal in the cloned repo, run `claude`, and p
 Read CLAUDE.md and docs/design/quakeloc-design.md first. We are continuing the
 quakeloc project (Assignment 5, DevOps & CI/CD) that was started in a Claude Code
 cloud session, which could not reach the seismic data APIs or run Minikube.
-I am now on my Mac with Docker Desktop. Check the "Status" and "Next steps"
-sections of CLAUDE.md, verify the current state of the repo (git log, tests,
-docker build), then help me with the remaining local-only steps: fetch the real
-KNET/USGS data snapshot (make data), start Jenkins and Minikube (docs/RUNBOOK.md),
-get the pipeline green on main including the Minikube deploy, take the screenshots
-for the report, and finish docs/reports/practical. Ask me before pushing to main.
-Keep CLAUDE.md updated as we go.
+I am now on my Mac with Docker Desktop (no network restrictions here).
+1. Run `git pull` and `git log --oneline -15`, then read the "Status" table in
+   CLAUDE.md and continue from the FIRST milestone that is not done.
+2. If no implementation plan exists yet, write one from the spec (small,
+   test-first tasks) and show it to me before coding. Then implement in the
+   order given in "Next steps", running tests after every task.
+3. Local-only steps (only possible on the Mac): fetch the real KNET/USGS
+   snapshot (make data), start Minikube and Jenkins (docs/RUNBOOK.md), get the
+   pipeline green on main including the Minikube deploy, take the screenshots,
+   finish docs/reports/practical.
+Ask me before pushing to main. Keep CLAUDE.md (Status, Next steps) updated.
 ```
+
+Do not develop the same branch in the cloud and on the Mac at the same time — finish
+or pause one side first, then `git pull` on the other.

@@ -13,8 +13,8 @@ echo "$*" >> "$CALLS"
 [ -t 0 ] || cat > /dev/null
 case "$*" in
   *"rollout history"*) printf 'REVISION\n1 <none>\n2 <none>\n' ;;
-  *"delete job"*) [ "${FAIL:-}" != delete ] ;;
-  *"create -f"*) [ "${FAIL:-}" != create ] ;;
+  *"delete job"*) [ "${FAIL:-}" != delete ] || exit 1 ;;
+  *"create -f"*) [ "${FAIL:-}" != create ] || exit 1 ;;
   *"get job"*)
     n=$(cat "$COUNTER" 2>/dev/null || echo 0); echo $((n + 1)) > "$COUNTER"
     if [ "${FAIL:-}" = transient ] && [ "$n" -lt 2 ]; then exit 1; fi

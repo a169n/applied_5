@@ -1,0 +1,14 @@
+{
+  "description": "FICTITIOUS synthetic test network on a local Cartesian grid (km). Not real stations.",
+  "fictitious": true,
+  "stations": [
+    {"name": "ST01", "x_km": 10.0, "y_km": 15.0, "elevation_km": 0.0},
+    {"name": "ST02", "x_km": 50.0, "y_km": 5.0, "elevation_km": 0.0},
+    {"name": "ST03", "x_km": 90.0, "y_km": 12.0, "elevation_km": 0.0},
+    {"name": "ST04", "x_km": 95.0, "y_km": 55.0, "elevation_km": 0.0},
+    {"name": "ST05", "x_km": 85.0, "y_km": 92.0, "elevation_km": 0.0},
+    {"name": "ST06", "x_km": 45.0, "y_km": 95.0, "elevation_km": 0.0},
+    {"name": "ST07", "x_km": 8.0, "y_km": 88.0, "elevation_km": 0.0},
+    {"name": "ST08", "x_km": 5.0, "y_km": 48.0, "elevation_km": 0.0}
+  ]
+}

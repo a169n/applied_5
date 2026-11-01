@@ -42,12 +42,12 @@ Read it before changing anything.
 
 | Field | Value |
 |---|---|
-| Full name (Latin) | _pending_ |
-| Group / student ID | _pending_ |
-| University, faculty | _pending_ |
-| Course name | _pending_ |
-| Instructor | _pending_ |
-| Mac chip / RAM | _pending_ |
+| Full name (Latin) | Aibyn Talgatov |
+| Group / student ID | CSE-2505M / 255308 |
+| University, faculty | Astana IT University, Computer Science and Engineering |
+| Course name | Applied Software Development Project |
+| Instructor | Akanova Akerke |
+| Mac chip / RAM | Apple M4 (arm64) / 16 GB; Docker VM 7.65 GiB |
 | Docker Hub username | _pending_ |
 | GitHub | `a169n` — repo https://github.com/a169n/applied_5 |
 
@@ -57,8 +57,8 @@ Read it before changing anything.
 |---|---|
 | Assignment analysed, project chosen (multi-agent idea selection) | done |
 | `main` created as default branch | done |
-| Design spec `docs/design/quakeloc-design.md` | rev 2 (independent 4-lens review, 34 verified fixes applied) — awaiting student review |
-| Implementation plan | not started (after spec approval) |
+| Design spec `docs/design/quakeloc-design.md` | rev 2 — approved by student 2026-11-01 |
+| Implementation plan | approved: `docs/superpowers/plans/2026-11-01-quakeloc.md`; native execution on branch `feat/quakeloc` |
 | Python package + tests | not started |
 | Dockerfile / Jenkins (JCasC) / k8s manifests / Makefile | not started |
 | Real-data snapshot `data/real/` | not started — **blocked in cloud** (see below) |
@@ -109,9 +109,10 @@ GitHub. Consequences:
 
 ## Next steps
 
-1. Student reviews `docs/design/quakeloc-design.md` → approve or request changes.
-2. Write the implementation plan, then implement in this order: core science package +
-   tests → Dockerfile → Makefile → Jenkins (JCasC) → k8s → fetch tool → reports → RUNBOOK.
+1. Execute `docs/superpowers/plans/2026-11-01-quakeloc.md` task by task, in this order:
+   core science package + tests → Dockerfile → Makefile → Jenkins (JCasC) → k8s → fetch
+   tool → reports → RUNBOOK.
+2. One fresh reviewer checks the whole branch at the end.
 3. On the Mac: follow `docs/RUNBOOK.md` (fetch real data, start Jenkins + Minikube,
    run the pipeline, take screenshots), then finish the practical report.
 

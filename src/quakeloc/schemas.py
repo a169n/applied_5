@@ -25,9 +25,9 @@ class PickRequest(_Strict):
 
 class StationPick(_Strict):
     station: str
-    t: float
+    t: float = Field(ge=-1e9, le=1e9)  # beyond this, double precision loses the milliseconds
 
 
 class LocateRequest(_Strict):
     picks: Annotated[list[StationPick], Field(max_length=1000)]
-    sigma_s: float | None = Field(default=None, gt=0)
+    sigma_s: float | None = Field(default=None, gt=0, le=3600)

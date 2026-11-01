@@ -22,8 +22,9 @@ openssl rand -base64 18 > jenkins/secrets/admin_password
 echo 'DOCKERHUB_USER=<your-docker-hub-username>' > jenkins/.env
 ```
 
-Create a Docker Hub access token with read and write scope at
-<https://app.docker.com/settings/personal-access-tokens>, then save it without echoing it:
+Create a **public** Docker Hub repository named `quakeloc` (Minikube pulls it without
+credentials) and an access token with read and write scope at
+<https://app.docker.com/settings/personal-access-tokens>, then save the token without echoing it:
 
 ```sh
 read -rs TOKEN && printf '%s' "$TOKEN" > jenkins/secrets/dockerhub_token; unset TOKEN
@@ -85,14 +86,17 @@ tarball, or run it directly:
 
 ```sh
 make data FETCH_ARGS="--min-mag 3.5"
-make calibrate realdata-gates realdata
+make image-test calibrate realdata-gates    # writes config/realdata_gates.json
+make image-test calibrate realdata          # second pass: the image must contain the new gates
 ```
 
 Commit the snapshot and `config/realdata_gates.json` in the same pull request, with the
 reason in the description. Gates change only together with the snapshot.
 
-If fewer than about 5 events qualify, widen the dates or lower the magnitude with
-`FETCH_ARGS`. The values used are recorded in `data/real/MANIFEST.json`.
+If too few events qualify, lower the magnitude with `FETCH_ARGS`; the values used are recorded
+in `data/real/MANIFEST.json`. Widening the dates does not help at present: in November 2026
+EarthScope returned HTTP 204 for KN outside roughly 2013 to 2016 (sampled at 2011, 2014, 2016
+and 2020), which is why the committed snapshot has only 4 events.
 
 If the `data` image does not compile on your machine, use a native environment instead:
 
@@ -128,6 +132,6 @@ minikube stop          # or `minikube delete` to remove the cluster
 | `up.sh` reports a missing file | Create it as in step 2. |
 | Stage 10 is skipped | Minikube was not running when `up.sh` ran. Start it and run `make jenkins-up`. |
 | `kubectl` in Jenkins cannot reach the cluster | The Minikube IP changed. Run `make jenkins-up` to regenerate the kubeconfig. |
-| Stage 7 fails on `cmp` | The baked artifacts differ from the tested ones: something non-deterministic entered the calibration inputs. Do not bypass this. |
+| Stage 7 fails on `cmp` | Locally: `src/` or `config/` changed since the last calibration; run `make image-test calibrate`. Under Jenkins: something non-deterministic entered the calibration inputs. Do not bypass this. |
 | Stage 6 fails with a missing gates file | The snapshot was committed without gates. Run `make realdata-gates`. |
 | Pods stay not ready | `kubectl -n quakeloc describe pod`, then `curl <url>/ready`. The response states the reason. |

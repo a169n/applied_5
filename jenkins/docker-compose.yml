@@ -6,7 +6,7 @@ services:
     user: root
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     environment:
       DOCKERHUB_USER: ${DOCKERHUB_USER:?set DOCKERHUB_USER in jenkins/.env}
       KUBECONFIG: /kube/config

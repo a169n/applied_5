@@ -80,3 +80,10 @@ def test_select_skips_weak_early():
 
 def test_select_empty_is_none():
     assert select_trigger([]) is None
+
+
+def test_energy_overflow_raises():
+    x = noise(1)
+    x[3000] = 1e160
+    with pytest.raises(SignalError, match="overflow"):
+        sta_lta(x, FS_HZ)

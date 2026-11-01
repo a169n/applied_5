@@ -16,6 +16,8 @@ pytestmark = [
 
 @pytest.fixture(scope="module")
 def results(tmp_path_factory):
+    if not (artifacts_dir() / "detector.json").exists():
+        pytest.fail("no calibration artifacts: run python -m quakeloc.calibrate first")
     out = tmp_path_factory.mktemp("relocation") / "relocation.csv"
     return relocate_all(snapshot_dir(), artifacts_dir(), out)
 

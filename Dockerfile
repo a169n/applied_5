@@ -17,6 +17,7 @@ COPY src ./src
 COPY config ./config
 COPY data/real ./data/real
 COPY tests ./tests
+COPY k8s ./k8s
 RUN pip install --no-deps . && rm -rf build src/*.egg-info && mkdir /reports
 
 # Same WORKDIR and paths as `test`, so the calibration outputs are byte-identical.

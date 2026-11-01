@@ -206,3 +206,47 @@ def test_tampered_snapshot_503_ready_unaffected(tiny_artifacts, tmp_path):
     r = c.get("/events/synth0001/locate")
     assert r.status_code == 503 and "checksum" in r.text
     assert c.get("/ready").status_code == 200
+
+
+@pytest.mark.parametrize("sigma", [1e154, 1e308])
+def test_locate_huge_sigma_422(client, sigma):
+    assert (
+        client.post("/locate", json={"picks": _good_picks(), "sigma_s": sigma}).status_code == 422
+    )
+
+
+def test_locate_huge_times_422(client):
+    picks = [{"station": p["station"], "t": 1e154} for p in _good_picks()]
+    assert client.post("/locate", json={"picks": picks}).status_code == 422
+
+
+@pytest.mark.parametrize(
+    "body", ["not json", '{"origin": {}}', "[]"], ids=["text", "nofiles", "list"]
+)
+def test_corrupt_manifest_503(tiny_artifacts, tmp_path, body):
+    root = tmp_path / "snap"
+    shutil.copytree(MINI, root)
+    (root / "MANIFEST.json").write_text(body)
+    c = TestClient(create_app(artifacts=tiny_artifacts, snapshot=root))
+    assert c.get("/events").status_code == 503
+    r = c.get("/events/synth0001/locate")
+    assert r.status_code == 503 and "MANIFEST" in r.text
+    assert c.get("/ready").status_code == 200
+
+
+@pytest.mark.parametrize("value", [1e200, 1e160])
+@pytest.mark.parametrize("index", [100, 3050, 3100])
+def test_pick_overflowing_sample_422(client, value, index):
+    from quakeloc.synth import trace
+
+    x = trace(20, 30.0, 1)
+    x[index] = value
+    assert client.post("/pick", json={"samples": x.tolist(), "fs_hz": 100}).status_code == 422
+
+
+def test_pick_handles_large_offset(client):
+    from quakeloc.synth import trace
+
+    x = trace(20, 30.0, 1) + 1.5e6
+    r = client.post("/pick", json={"samples": x.tolist(), "fs_hz": 100}).json()
+    assert abs(r["pick_time_s"] - 30.0) < 0.1

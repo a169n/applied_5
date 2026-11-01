@@ -143,7 +143,9 @@ def create_app(artifacts=None, snapshot=None, config=None) -> FastAPI:
     def pick(req: PickRequest):
         on = require_detector()["on_raw"]
         try:
-            result = pick_trace(req.samples, req.fs_hz, on)
+            # Raw counts carry a large offset, which would swamp the energy ratio.
+            samples = np.array(req.samples)
+            result = pick_trace(samples - samples.mean(), req.fs_hz, on)
         except SignalError as exc:
             raise HTTPException(422, str(exc)) from exc
         return {

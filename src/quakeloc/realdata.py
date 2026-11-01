@@ -82,8 +82,12 @@ def load_snapshot(root) -> Snapshot:
     if not manifest_path.exists():
         raise SnapshotError(f"no MANIFEST.json in {root}")
     raw = manifest_path.read_bytes()
-    manifest = json.loads(raw)
-    for name, expected in manifest["files"].items():
+    try:
+        manifest = json.loads(raw)
+        files, origin = manifest["files"].items(), manifest["origin"]
+    except (ValueError, KeyError, TypeError, AttributeError) as exc:
+        raise SnapshotError(f"MANIFEST.json is unreadable: {exc}") from exc
+    for name, expected in files:
         path = root / name
         if not path.exists():
             raise SnapshotError(f"snapshot file missing: {name}")
@@ -92,7 +96,7 @@ def load_snapshot(root) -> Snapshot:
     return Snapshot(
         root=root,
         events=json.loads((root / "events.json").read_text()),
-        origin=manifest["origin"],
+        origin=origin,
         manifest_hash=hashlib.sha256(raw).hexdigest(),
     )
 

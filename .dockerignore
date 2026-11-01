@@ -6,7 +6,6 @@ artifacts
 artifacts.*
 docs
 jenkins
-k8s
 *.tar.gz
 **/__pycache__
 **/.pytest_cache

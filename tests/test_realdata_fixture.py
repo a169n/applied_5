@@ -174,3 +174,11 @@ def test_cli(tiny_artifacts, tmp_path):
     argv = ["--snapshot", str(MINI), "--artifacts", str(tiny_artifacts), "--out", str(out)]
     assert main([*argv, "--write-gates", str(gates)]) == 0
     assert out.exists() and gates.exists()
+
+
+def test_corrupt_manifest_is_a_snapshot_error(tmp_path):
+    root = tmp_path / "snap"
+    shutil.copytree(MINI, root)
+    (root / "MANIFEST.json").write_text("not json")
+    with pytest.raises(SnapshotError, match="MANIFEST"):
+        load_snapshot(root)

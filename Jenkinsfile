@@ -80,11 +80,11 @@ pipeline {
                                                   usernameVariable: 'DOCKERHUB_LOGIN',
                                                   passwordVariable: 'DOCKERHUB_TOKEN')]) {
                     sh '''
+                        trap 'docker logout' EXIT
                         echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_LOGIN" --password-stdin
                         docker push "$IMAGE:$SHORT_SHA"
                         docker tag "$IMAGE:$SHORT_SHA" "$IMAGE:latest"
                         docker push "$IMAGE:latest"
-                        docker logout
                     '''
                 }
             }

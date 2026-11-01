@@ -13,8 +13,8 @@ Kubernetes (Minikube) deployment.
 
 ```sh
 make venv                         # Python 3.12 environment (needs uv)
-.venv/bin/pytest                  # all tests, natively
 .venv/bin/python -m quakeloc.calibrate --seed 42 --out artifacts/
+.venv/bin/pytest                  # all tests, natively (real-data tests use artifacts/)
 .venv/bin/uvicorn quakeloc.api:app --port 8000   # then open http://localhost:8000/docs
 ```
 
@@ -33,6 +33,19 @@ P phase only, one-layer (homogeneous) velocity model of 6.0 km/s, depth fixed at
 epicentre, no magnitude estimation. The causal band-pass filter adds a known positive bias of
 about 0.07 s to picks and origin times. USGS solutions are used as a reference, not as ground
 truth: catalog locations carry several kilometres of uncertainty themselves.
+
+## Real-data results
+
+The snapshot holds **4 events** (M 4.0 to 4.9, 2013 to 2015). The EarthScope archive returned
+no KN waveforms for most of the 2005 to 2025 catalog period, so lowering the magnitude limit to
+3.5 added no qualifying event. All 4 locate, with RMS 0.11 to 0.27 s and mislocations against
+USGS of **2.8, 7.5, 12.2 and 18.3 km**, and origin-time differences of up to 3.5 s.
+
+Four events are a demonstration, not a statistical validation. The 95 % ellipses (semi-major
+axes 1.7 to 17 km) reflect pick scatter only: they exclude the one-layer model and the fixed
+depth, so the USGS epicentre often lies outside them. The largest mislocation and origin-time
+difference occur for the event USGS places deepest (21 km against our fixed 10 km), which
+suggests those limitations matter, though it does not prove the cause.
 
 ## Data
 

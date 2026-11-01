@@ -33,6 +33,9 @@ def _check(x, n_lta):
         raise SignalError(f"trace of {len(x)} samples is shorter than the LTA window")
     if not np.all(np.isfinite(x)):
         raise SignalError("trace contains non-finite samples")
+    with np.errstate(over="ignore"):
+        if not np.isfinite(np.sum(x**2)):
+            raise SignalError("trace energy overflows")
     if np.ptp(x) == 0:
         raise SignalError("flat trace")
     return x

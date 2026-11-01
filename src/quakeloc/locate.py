@@ -51,7 +51,7 @@ def _jacobian(x, y, sta_xy, h_km) -> np.ndarray:
     """Partial derivatives of the arrival time with respect to (x, y, t0)."""
     dx, dy = x - sta_xy[:, 0], y - sta_xy[:, 1]
     r = np.sqrt(dx**2 + dy**2 + (DEPTH_KM + h_km) ** 2)
-    return np.column_stack([dx / (VP_KM_S * r), dy / (VP_KM_S * r), np.ones(len(r))])
+    return np.column_stack([-dx / (VP_KM_S * r), dy / (VP_KM_S * r), np.ones(len(r))])
 
 
 def _ellipse(g, residuals, sigma_s) -> Ellipse:

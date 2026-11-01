@@ -3,6 +3,7 @@
 .superpowers
 reports
 artifacts
+artifacts.*
 docs
 jenkins
 k8s

@@ -42,12 +42,12 @@ FROM python:3.12-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 PIP_NO_CACHE_DIR=1 PYTHONUNBUFFERED=1 \
     QUAKELOC_ARTIFACTS=/artifacts QUAKELOC_CONFIG=/app/config QUAKELOC_SNAPSHOT=/app/data/real
 WORKDIR /app
-COPY --from=deps /wheels /wheels
 COPY requirements.txt pyproject.toml /build/
 COPY src /build/src
-RUN pip install --no-index --find-links /wheels -r /build/requirements.txt \
+RUN --mount=type=bind,from=deps,source=/wheels,target=/wheels \
+    pip install --no-index --find-links /wheels -r /build/requirements.txt \
     && pip install --no-deps /build \
-    && rm -rf /wheels /build \
+    && rm -rf /build \
     && useradd -u 10001 -r app
 COPY --from=artifacts /artifacts /artifacts
 COPY config ./config

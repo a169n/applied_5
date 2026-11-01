@@ -1,0 +1,80 @@
+{
+  "catalog_events_considered": 20,
+  "citations": [
+    "KNET, Kyrgyz Digital Network, FDSN network code KN, doi:10.7914/SN/KN",
+    "U.S. Geological Survey, Comprehensive Earthquake Catalog (ComCat)"
+  ],
+  "fetched_at": "2026-11-01T10:11:55+00:00",
+  "files": {
+    "events.json": "1a7a3e188758a7ec41c7e3da40c1a9cb552f16905ccdaccedc74bfee8ecefbc7",
+    "waveforms/usb000l53i.npz": "49aaf8dae4b14d3c75078e4993e3a256949f6e4ff5c11a3ca6c6e91e4ef46f15",
+    "waveforms/usb000m5vd.npz": "eb4a46c5d868d2288adf3436d37b27e70146c50a1e06a4f56c8a1babefb36c41",
+    "waveforms/usb000r68x.npz": "6b31fccfade6f8cd97c8a5d3392ac690f151eced824126a1362c86d7883d513d",
+    "waveforms/usc000tiaa.npz": "409f75af8eb5771f5b4794569f6289af2fd71a33fadb2da2bbdcbcbca0ed797f"
+  },
+  "origin": {
+    "lat": 42.58,
+    "lon": 74.78
+  },
+  "parameters": {
+    "channels": [
+      "HHZ",
+      "BHZ"
+    ],
+    "end": "2025-12-31",
+    "event_radius_km": 100.0,
+    "max_azimuthal_gap_deg": 200.0,
+    "max_events": 10,
+    "min_magnitude": 3.5,
+    "min_stations": 6,
+    "network": "KN",
+    "start": "2005-01-01",
+    "station_radius_km": 150.0,
+    "window_after_s": 120.0,
+    "window_before_s": 60.0
+  },
+  "query_urls": [
+    "https://earthquake.usgs.gov/fdsnws/event/1/query?starttime=2005-01-01&endtime=2025-12-31&minmagnitude=3.5&latitude=42.58&longitude=74.78&maxradiuskm=100.0",
+    "https://service.earthscope.org/fdsnws/station/1/query?network=KN&channel=HHZ,BHZ&level=channel&starttime=2005-01-01&endtime=2025-12-31",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AAK&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AML&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=CHM&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=EKS2&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KBK&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KZA&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=TKM2&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=UCH&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=ULHL&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=USP&location=--&channel=HHZ&starttime=2014-05-28T02:24:59.670000Z&endtime=2014-05-28T02:27:59.670000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AAK&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AML&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=CHM&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=EKS2&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KBK&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=TKM2&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=UCH&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=ULHL&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=USP&location=--&channel=HHZ&starttime=2015-01-22T15:51:30.710000Z&endtime=2015-01-22T15:54:30.710000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AAK&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AML&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=CHM&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=EKS2&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KBK&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KZA&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=UCH&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=ULHL&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=USP&location=--&channel=HHZ&starttime=2014-01-21T20:45:36.490000Z&endtime=2014-01-21T20:48:36.490000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=AAK&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=CHM&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KBK&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=KZA&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=TKM2&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=UCH&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=ULHL&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z",
+    "https://service.earthscope.org/fdsnws/dataselect/1/query?network=KN&station=USP&location=--&channel=HHZ&starttime=2013-11-23T09:41:07.850000Z&endtime=2013-11-23T09:44:07.850000Z"
+  ],
+  "versions": {
+    "numpy": "2.5.4",
+    "obspy": "1.5.1"
+  }
+}

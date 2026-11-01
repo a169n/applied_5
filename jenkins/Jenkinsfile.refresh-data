@@ -1,0 +1,84 @@
+// Fetches a fresh snapshot, relocates it and shows what changed. It never pushes anything:
+// a human commits the archived snapshot through a pull request, where the main pipeline
+// validates it again. The only job that uses the network for data.
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+    }
+
+    environment {
+        TAG = "refresh-${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Build images') {
+            steps {
+                sh 'docker build --target data -t quakeloc-data:$TAG .'
+                sh 'make image-test'
+            }
+        }
+        stage('Fetch snapshot') {
+            steps {
+                sh '''
+                    docker create --name f-$TAG quakeloc-data:$TAG --out /snapshot \
+                        --start "$START" --end "$END" --min-mag "$MIN_MAG" --max-events "$MAX_EVENTS"
+                    docker start -a f-$TAG
+                    rm -rf snapshot-new
+                    docker cp f-$TAG:/snapshot snapshot-new
+                '''
+            }
+        }
+        stage('Relocate new snapshot') {
+            steps {
+                sh 'make calibrate'
+                sh '''
+                    mkdir -p reports
+                    docker create --name r-$TAG quakeloc-test:$TAG python -m quakeloc.realdata \
+                        --snapshot /snapshot --artifacts /artifacts --out /reports/relocation.csv
+                    docker cp snapshot-new/. r-$TAG:/snapshot
+                    docker cp artifacts/. r-$TAG:/artifacts
+                    docker start -a r-$TAG
+                    docker cp r-$TAG:/reports/relocation.csv reports/relocation.csv
+                '''
+            }
+        }
+        stage('Compare with the committed snapshot') {
+            steps {
+                sh '''
+                    hashes() { grep -E '"[^"]+": "[0-9a-f]{64}"' "$1" | sed 's/^ *//' | sort; }
+                    if [ -f data/real/MANIFEST.json ]; then
+                        hashes data/real/MANIFEST.json > manifest.old
+                    else
+                        : > manifest.old
+                    fi
+                    hashes snapshot-new/MANIFEST.json > manifest.new
+                    echo "=== Files added (>), removed (<) or changed ==="
+                    set +e
+                    diff manifest.old manifest.new
+                    set -e
+                    echo "=== New relocation ==="
+                    cat reports/relocation.csv
+                    echo "=== Current gates ==="
+                    if [ -f config/realdata_gates.json ]; then cat config/realdata_gates.json; fi
+                    tar -czf snapshot-new.tar.gz snapshot-new reports/relocation.csv
+                '''
+                archiveArtifacts artifacts: 'snapshot-new.tar.gz, reports/relocation.csv', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            sh '''
+                docker rm -f f-$TAG r-$TAG
+                docker rmi quakeloc-data:$TAG
+            '''
+            sh 'make clean-build'
+            cleanWs()
+        }
+    }
+}

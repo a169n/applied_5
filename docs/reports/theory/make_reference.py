@@ -8,9 +8,13 @@ from docx.shared import Cm, Pt, RGBColor
 
 OUT = sys.argv[1]
 with open(OUT, "wb") as f:
-    f.write(subprocess.run(
-        ["pandoc", "--print-default-data-file", "reference.docx"], check=True, capture_output=True
-    ).stdout)
+    f.write(
+        subprocess.run(
+            ["pandoc", "--print-default-data-file", "reference.docx"],
+            check=True,
+            capture_output=True,
+        ).stdout
+    )
 
 doc = Document(OUT)
 section = doc.sections[0]
@@ -27,9 +31,14 @@ def style(name, bold=False, italic=False, spacing=1.5, before=0, after=0):
     rpr = s.element.get_or_add_rPr()
     fonts = rpr.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rFonts")
     for attr in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
-        fonts.attrib.pop(f"{{http://schemas.openxmlformats.org/wordprocessingml/2006/main}}{attr}", None)
+        fonts.attrib.pop(
+            f"{{http://schemas.openxmlformats.org/wordprocessingml/2006/main}}{attr}", None
+        )
     for attr in ("ascii", "hAnsi", "eastAsia", "cs"):
-        fonts.set(f"{{http://schemas.openxmlformats.org/wordprocessingml/2006/main}}{attr}", "Times New Roman")
+        fonts.set(
+            f"{{http://schemas.openxmlformats.org/wordprocessingml/2006/main}}{attr}",
+            "Times New Roman",
+        )
     p = s.paragraph_format
     p.line_spacing, p.space_before, p.space_after = spacing, Pt(before), Pt(after)
 

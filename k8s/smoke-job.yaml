@@ -1,0 +1,22 @@
+# Never part of a directory-wide apply: k8s/deploy.sh creates it after each rollout.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: quakeloc-smoke
+  namespace: quakeloc
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: smoke
+          image: __IMAGE__
+          command: ["python", "-m", "quakeloc.smoke", "--url", "http://quakeloc.quakeloc.svc:8000"]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true

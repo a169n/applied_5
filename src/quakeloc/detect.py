@@ -21,7 +21,10 @@ class Episode:
 
 
 def _window_lengths(fs):
-    return int(round(STA_S * fs)), int(round(LTA_S * fs))
+    n_sta, n_lta = int(round(STA_S * fs)), int(round(LTA_S * fs))
+    if n_sta < 1:
+        raise SignalError(f"sampling rate {fs} Hz is too low for a {STA_S} s STA window")
+    return n_sta, n_lta
 
 
 def _check(x, n_lta):

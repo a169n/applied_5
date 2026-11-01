@@ -131,7 +131,8 @@ def test_relocate_all_continues_and_writes_csv(tiny_artifacts, tmp_path):
     out = tmp_path / "relocation.csv"
     results = relocate_all(MINI, tiny_artifacts, out)
     assert [r.located for r in results] == [True, False]
-    rows = list(csv.DictReader(out.open()))
+    with out.open() as f:
+        rows = list(csv.DictReader(f))
     assert len(rows) == 2
     for column in (
         "event_id",

@@ -22,6 +22,11 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.pytest.ini_options]
 addopts = "--strict-markers"
 testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    # Starlette's TestClient still works on the pinned httpx; only its future is deprecated.
+    "ignore:Using `httpx` with `starlette.testclient`",
+]
 markers = [
     "science: scientific validation (statistical calibration, coverage, golden)",
     "realdata: validation on the committed real KNET snapshot",

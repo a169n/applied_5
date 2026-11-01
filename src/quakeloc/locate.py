@@ -26,6 +26,15 @@ class Ellipse:
     b_km: float
     azimuth_deg: float  # of the major axis, clockwise from north, in [0, 180)
 
+    def contains(self, dx_km, dy_km) -> bool:
+        """Whether an offset (east, north) from the centre lies inside the ellipse."""
+        if self.b_km <= 0:
+            return False
+        az = math.radians(self.azimuth_deg)
+        along = dx_km * math.sin(az) + dy_km * math.cos(az)
+        across = dx_km * math.cos(az) - dy_km * math.sin(az)
+        return (along / self.a_km) ** 2 + (across / self.b_km) ** 2 <= 1.0
+
 
 @dataclass(frozen=True)
 class Solution:

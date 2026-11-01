@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from quakeloc.locate import LocationError, _jacobian, locate
+from quakeloc.locate import Ellipse, LocationError, _jacobian, locate
 from quakeloc.model import load_network, travel_time
 
 net = load_network()
@@ -120,3 +120,10 @@ def test_ellipse_azimuth_along_elongated_geometry():
 
 def test_rms_zero_when_noise_free():
     assert locate(net.xy, net.h_km, exact_times((50, 50))).rms_s < 1e-6
+
+
+def test_ellipse_contains():
+    # Major axis 2 km pointing east (azimuth 90), minor axis 1 km.
+    e = Ellipse(2.0, 1.0, 90.0)
+    assert e.contains(1.9, 0.0) and not e.contains(2.1, 0.0)
+    assert e.contains(0.0, 0.9) and not e.contains(0.0, 1.1)

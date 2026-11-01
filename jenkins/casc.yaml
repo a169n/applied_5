@@ -1,0 +1,72 @@
+jenkins:
+  systemMessage: "quakeloc CI/CD. Configured as code; see jenkins/casc.yaml."
+  numExecutors: 1
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: "${admin_password}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+unclassified:
+  location:
+    url: "http://localhost:8080/"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: dockerhub
+              description: Docker Hub push token
+              username: "${DOCKERHUB_USER}"
+              password: "${dockerhub_token}"
+
+jobs:
+  - script: |
+      multibranchPipelineJob('quakeloc') {
+        displayName('quakeloc')
+        description('Main CI/CD pipeline. Every pushed branch head is built within about 2 minutes.')
+        branchSources {
+          git {
+            id('quakeloc-github')
+            remote('https://github.com/a169n/applied_5.git')
+          }
+        }
+        orphanedItemStrategy {
+          discardOldItems {
+            numToKeep(10)
+          }
+        }
+        triggers {
+          periodicFolderTrigger {
+            interval('2m')
+          }
+        }
+      }
+      pipelineJob('quakeloc-refresh-data') {
+        description('Fetches a new real-data snapshot and relocates it. Never pushes; a human commits it through a PR.')
+        parameters {
+          stringParam('START', '2005-01-01', 'Catalog start date')
+          stringParam('END', '2025-12-31', 'Catalog end date')
+          stringParam('MIN_MAG', '4.0', 'Minimum magnitude')
+          stringParam('MAX_EVENTS', '10', 'Maximum number of events to keep')
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/a169n/applied_5.git')
+                }
+                branch('*/main')
+              }
+            }
+            scriptPath('jenkins/Jenkinsfile.refresh-data')
+          }
+        }
+      }

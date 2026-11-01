@@ -59,8 +59,8 @@ Read it before changing anything.
 | `main` created as default branch | done |
 | Design spec `docs/design/quakeloc-design.md` | rev 2 — approved by student 2026-11-01 |
 | Implementation plan | approved: `docs/superpowers/plans/2026-11-01-quakeloc.md`; native execution on branch `feat/quakeloc` |
-| Python package + tests | not started |
-| Dockerfile / Jenkins (JCasC) / k8s manifests / Makefile | not started |
+| Python package + tests | done on `feat/quakeloc` (fixture snapshot; real snapshot pending) |
+| Dockerfile / Makefile / Jenkins (JCasC) | done on `feat/quakeloc`; k8s in progress |
 | Real-data snapshot `data/real/` | not started — **blocked in cloud** (see below) |
 | Theory report (3 pages) | not started |
 | RUNBOOK for macOS | not started |

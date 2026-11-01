@@ -31,9 +31,9 @@ Read it before changing anything.
   header instead of a separate title page (unless the student says otherwise).
 - Project: **quakeloc**, hybrid data = synthetic (tests) + committed real snapshot of
   KNET (`KN`) waveforms with USGS catalog solutions + live-API refresh job.
-- Student's machine: **macOS** (Docker Desktop). Chip and RAM: *not yet provided*.
+- Student's machine: **macOS** (Docker Desktop). Apple M4, 16 GB.
 - CD bonus: **yes**, Minikube (docker driver), deployed automatically by Jenkins.
-- Docker Hub push: **yes** — the student will create an account; username *not yet provided*.
+- Docker Hub push: **yes** — account `a169n`.
 - Theory report examples anchored in the project's domain (seismology / research software).
 - `main` is the GitHub default branch. Feature work happens on branches and goes to
   `main` via PRs; Jenkins pushes/deploys only from `main`.
@@ -48,7 +48,7 @@ Read it before changing anything.
 | Course name | Applied Software Development Project |
 | Instructor | Akanova Akerke |
 | Mac chip / RAM | Apple M4 (arm64) / 16 GB; Docker VM 7.65 GiB |
-| Docker Hub username | _pending_ (needed before merging to `main`) |
+| Docker Hub username | `a169n` (image `a169n/quakeloc`, public) |
 | GitHub | `a169n` — repo https://github.com/a169n/applied_5 |
 
 ## Status

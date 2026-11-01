@@ -13,7 +13,9 @@ def _http_get(url):
     def get(path):
         try:
             with urllib.request.urlopen(url + path, timeout=30) as r:
-                return r.status, json.loads(r.read())
+                body = r.read()
+                is_json = r.headers.get_content_type() == "application/json"
+                return r.status, json.loads(body) if is_json else body.decode()
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read() or b"null")
 
@@ -41,6 +43,10 @@ def check(get, expected_sha=None) -> list[str]:
         failures.append(f"/version returned {status}")
     elif expected_sha and version["git_sha"] != expected_sha:
         failures.append(f"/version git_sha {version['git_sha']} != expected {expected_sha}")
+
+    status, _ = get("/")
+    if status != 200:
+        failures.append(f"/ returned {status}, not the web client")
 
     status, demo = get("/demo")
     if status != 200 or demo["error_km"] >= 1.0:

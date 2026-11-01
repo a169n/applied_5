@@ -15,7 +15,7 @@ Kubernetes (Minikube) deployment.
 make venv                         # Python 3.12 environment (needs uv)
 .venv/bin/python -m quakeloc.calibrate --seed 42 --out artifacts/
 .venv/bin/pytest                  # all tests, natively (real-data tests use artifacts/)
-.venv/bin/uvicorn quakeloc.api:app --port 8000   # then open http://localhost:8000/docs
+.venv/bin/uvicorn quakeloc.api:app --port 8000   # then open http://localhost:8000
 ```
 
 The same steps in the shipped environment, exactly as CI runs them:
@@ -26,6 +26,9 @@ make image-test lint test calibrate science realdata image smoke
 
 `docs/RUNBOOK.md` covers Jenkins, Minikube and refreshing the data on macOS.
 `docs/design/quakeloc-design.md` is the design specification.
+
+The web client at `/` lists the real earthquakes and maps our location and 95 % ellipse against
+USGS. It is one HTML file served by the API, with no build step; `/docs` has the API reference.
 
 ## Scope limits
 

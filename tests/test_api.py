@@ -27,6 +27,13 @@ def _good_picks(xy=(50, 50)):
     return [{"station": n, "t": float(t)} for n, t in zip(net.names, times, strict=True)]
 
 
+def test_root_serves_the_web_client(client):
+    r = client.get("/")
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/html")
+    assert "/events" in r.text
+
+
 def test_health_and_ready_ok(client):
     assert client.get("/health").status_code == 200
     assert client.get("/ready").status_code == 200

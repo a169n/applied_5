@@ -63,6 +63,7 @@ Read it before changing anything.
 | Dockerfile / Makefile / Jenkins (JCasC) / k8s | done on `feat/quakeloc`; deploy tested with a locally loaded image, Docker Hub push pending credentials |
 | Real-data snapshot `data/real/` | done: 4 events (archive gap; see `docs/RUNBOOK.md`), gates committed |
 | Theory report (3 pages) | done: `docs/reports/theory/` |
+| Web client at `/` | PR open: `feat/web-client` (one HTML file served by the API) |
 | RUNBOOK for macOS | written: `docs/RUNBOOK.md` |
 | Local run on Mac + screenshots | Jenkins and Minikube running; green `main` needs merge approval and Docker Hub credentials |
 | Practical report (1–2 pages) | not started (needs screenshots) |

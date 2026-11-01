@@ -9,7 +9,8 @@ from quakeloc.smoke import check, wait_ready
 def _get(client):
     def get(path):
         r = client.get(path)
-        return r.status_code, r.json()
+        is_json = r.headers["content-type"].startswith("application/json")
+        return r.status_code, r.json() if is_json else r.text
 
     return get
 
@@ -27,6 +28,15 @@ def test_smoke_passes_against_testclient(client):
 def test_smoke_fails_on_wrong_sha(client):
     failures = check(_get(client), expected_sha="other")
     assert len(failures) == 1 and "other" in failures[0]
+
+
+def test_smoke_fails_when_the_web_client_is_missing(client):
+    real = _get(client)
+
+    def get(path):
+        return (404, None) if path == "/" else real(path)
+
+    assert check(get) == ["/ returned 404, not the web client"]
 
 
 def test_smoke_skips_events_without_snapshot(client, capsys):

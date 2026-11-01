@@ -66,14 +66,16 @@ def sta_lta_naive(x, fs) -> tuple[np.ndarray, int]:
 def triggers(ratio, on, off=OFF) -> list[Episode]:
     """Hysteresis: an episode opens at ``ratio >= on`` and closes at ``ratio < off``."""
     episodes = []
-    i, n = 0, len(ratio)
+    ratio = np.asarray(ratio)
+    n, i = len(ratio), 0
     while i < n:
-        if ratio[i] < on:
-            i += 1
-            continue
-        below = np.flatnonzero(ratio[i:] < off)
-        end = i + int(below[0]) if len(below) else n - 1
-        episodes.append(Episode(i, end, float(ratio[i : end + 1].max())))
+        above = np.flatnonzero(ratio[i:] >= on)
+        if not len(above):
+            break
+        start = i + int(above[0])
+        below = np.flatnonzero(ratio[start:] < off)
+        end = start + int(below[0]) if len(below) else n - 1
+        episodes.append(Episode(start, end, float(ratio[start : end + 1].max())))
         i = end + 1
     return episodes
 

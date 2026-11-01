@@ -84,7 +84,7 @@ def locate(sta_xy, h_km, t_obs, sigma_s=None, jacobian=_jacobian) -> Solution:
     r = residuals(x, y, t0)
     damping = 1e-3
     iterations = 0
-    for iterations in range(1, _MAX_ITER + 1):
+    for iterations in range(1, _MAX_ITER + 1):  # noqa: B007 (reported after the loop)
         g = jacobian(x, y, sta_xy, h_km)
         scale = np.sqrt(damping) * np.linalg.norm(g, axis=0)
         augmented = np.vstack([g, np.diag(scale)])

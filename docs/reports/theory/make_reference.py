@@ -7,6 +7,7 @@ from docx import Document
 from docx.shared import Cm, Pt, RGBColor
 
 OUT = sys.argv[1]
+W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 with open(OUT, "wb") as f:
     f.write(
         subprocess.run(
@@ -29,7 +30,7 @@ def style(name, bold=False, italic=False, spacing=1.5, before=0, after=0):
     s.font.bold, s.font.italic = bold, italic
     s.font.color.rgb = RGBColor(0, 0, 0)
     rpr = s.element.get_or_add_rPr()
-    fonts = rpr.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rFonts")
+    fonts = rpr.find(f"{W}rFonts")
     for attr in ("asciiTheme", "hAnsiTheme", "eastAsiaTheme", "cstheme"):
         fonts.attrib.pop(
             f"{{http://schemas.openxmlformats.org/wordprocessingml/2006/main}}{attr}", None

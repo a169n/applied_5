@@ -48,7 +48,7 @@ Read it before changing anything.
 | Course name | Applied Software Development Project |
 | Instructor | Akanova Akerke |
 | Mac chip / RAM | Apple M4 (arm64) / 16 GB; Docker VM 7.65 GiB |
-| Docker Hub username | _pending_ |
+| Docker Hub username | _pending_ (needed before merging to `main`) |
 | GitHub | `a169n` — repo https://github.com/a169n/applied_5 |
 
 ## Status
@@ -59,7 +59,7 @@ Read it before changing anything.
 | `main` created as default branch | done |
 | Design spec `docs/design/quakeloc-design.md` | rev 2 — approved by student 2026-11-01 |
 | Implementation plan | approved: `docs/superpowers/plans/2026-11-01-quakeloc.md`; native execution on branch `feat/quakeloc` |
-| Python package + tests | done on `feat/quakeloc` (fixture snapshot; real snapshot pending) |
+| Python package + tests | done on `feat/quakeloc` (173 tests pass) |
 | Dockerfile / Makefile / Jenkins (JCasC) / k8s | done on `feat/quakeloc`; deploy tested with a locally loaded image, Docker Hub push pending credentials |
 | Real-data snapshot `data/real/` | done: 4 events (archive gap; see `docs/RUNBOOK.md`), gates committed |
 | Theory report (3 pages) | done: `docs/reports/theory/` |
@@ -109,12 +109,17 @@ GitHub. Consequences:
 
 ## Next steps
 
-1. Execute `docs/superpowers/plans/2026-11-01-quakeloc.md` task by task, in this order:
-   core science package + tests → Dockerfile → Makefile → Jenkins (JCasC) → k8s → fetch
-   tool → reports → RUNBOOK.
-2. One fresh reviewer checks the whole branch at the end.
-3. On the Mac: follow `docs/RUNBOOK.md` (fetch real data, start Jenkins + Minikube,
-   run the pipeline, take screenshots), then finish the practical report.
+Tasks 1-18 of `docs/superpowers/plans/2026-11-01-quakeloc.md` are done and reviewed; the PR from
+`feat/quakeloc` is open. Remaining (Task 19), after the student supplies Docker Hub details and
+approves the merge:
+
+1. Student: create the public `quakeloc` Docker Hub repository, `jenkins/.env` and
+   `jenkins/secrets/dockerhub_token` (`docs/RUNBOOK.md` step 2), then recreate Jenkins (step 3).
+2. Merge the PR. Expect all 10 stages green, the image on Docker Hub and `/version` in Minikube
+   equal to `main` HEAD. Run `quakeloc-refresh-data` once.
+3. Push `demo/broken-locator` (RUNBOOK step 7) and confirm red at stage 4.
+4. Take the screenshots, write and build `docs/reports/practical/` (1-2 pages), merge, and tag
+   `v1.0.0` (ask first).
 
 ## Handoff prompt for Claude Code on the Mac
 

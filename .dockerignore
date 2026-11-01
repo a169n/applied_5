@@ -1,0 +1,14 @@
+.git
+.venv
+.superpowers
+reports
+artifacts
+docs
+jenkins
+k8s
+*.tar.gz
+**/__pycache__
+**/.pytest_cache
+**/.hypothesis
+**/.ruff_cache
+.coverage*

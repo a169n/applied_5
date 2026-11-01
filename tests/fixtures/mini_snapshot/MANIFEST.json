@@ -1,0 +1,12 @@
+{
+  "description": "SYNTHETIC fixture for tests. Not real data.",
+  "files": {
+    "events.json": "cc928ad4631a449c7ecb21cf05b8e2772d630241917b5a1fe5cafd5a7df23e4f",
+    "waveforms/synth0001.npz": "06e6dbf0031f28b01fa5be203b7bed9758b7270c248241035929d9425a275ee9",
+    "waveforms/synth0002.npz": "b4dec82f10990db378806acaaedc3275a5f213d73b1376111b7d0fdf8c8e7bdf"
+  },
+  "origin": {
+    "lat": 42.58,
+    "lon": 74.78
+  }
+}

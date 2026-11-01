@@ -12,17 +12,17 @@ quakeloc detects earthquakes (STA/LTA), picks P-wave onsets (AIC) and locates ep
 
 # 2. Steps
 
-**Docker.** A multi-stage `Dockerfile` has separate `test`, `artifacts`, `data` and `runtime` targets. The runtime image contains no compilers or test tools and runs as a non-root user. It is 516 MB locally and 108.9 MB compressed on Docker Hub (Figure 3). A build fails if the calibration artifacts it bakes in differ from those the tests validated.
+**Docker.** A multi-stage `Dockerfile` has separate `test`, `artifacts`, `data` and `runtime` targets. The runtime image contains no compilers or test tools and runs as a non-root user. It is 516 MB locally and 108.9 MB compressed on Docker Hub. A build fails if its calibration artifacts differ from those the tests validated.
 
-**Jenkins.** Jenkins runs in Docker and is configured entirely from the repository (Configuration as Code and Job DSL), so it can be recreated with one command. A multibranch job scans GitHub every 2 minutes, because a local Jenkins cannot receive webhooks. The ten stages are checkout, test image, lint, unit and property tests, scientific validation, real-data validation, runtime image, container smoke test, Docker Hub push and Minikube deploy. The last two run only on `main`. A separate job refreshes the data and never pushes; its first run fetched files identical to the committed snapshot.
+**Jenkins.** Jenkins runs in Docker and is configured entirely from the repository (Configuration as Code and Job DSL), so one command recreates it. A multibranch job scans GitHub every 2 minutes, because a local Jenkins cannot receive webhooks. The ten stages are checkout, test image, lint, unit and property tests, scientific validation, real-data validation, runtime image, container smoke test, Docker Hub push and Minikube deploy. The last two run only on `main`. A separate job refreshes the data and never pushes; its first run fetched files identical to the committed snapshot.
 
 **Git and automation.** Work reached `main` through a pull request, and every build and test stage has a `make` target with the same command, so CI failures can be reproduced locally.
 
-**Deployment (bonus).** Stage 10 deploys the image tagged with the commit SHA to Minikube, runs a smoke Job inside the cluster and rolls back on failure. I tested the rollback manually.
+**Deployment (bonus).** Stage 10 deploys the image tagged with the commit SHA to Minikube, runs a smoke Job inside the cluster and rolls back on failure. I tested the rollback manually. The service also serves a small web client at `/`, where a user picks an earthquake and compares our location with USGS.
 
 # 3. Results
 
-**Green run.** `main` build #1 passed all stages in 2 min 23 s (Figure 1) with 173 tests passing (Figure 4). Most stages were fast because the branch build had already filled the Docker layer cache. `/version` in the cluster returned the SHA of `main` HEAD, `d5ba3ca`.
+**Green run.** `main` build #1 passed all stages in 2 min 23 s (Figure 1) with 173 tests passing (Figure 3). `/version` in the cluster returned the SHA of `main` HEAD, `d5ba3ca`.
 
 ![Figure 1. Green pipeline on `main`, build #1.](figures/jenkins_green.png){width=17cm}
 
@@ -30,28 +30,25 @@ quakeloc detects earthquakes (STA/LTA), picks P-wave onsets (AIC) and locates ep
 
 ![Figure 2. Red pipeline on `demo/broken-locator`. The console reports stages 5 to 10 as "skipped due to earlier failure"; Stage View paints them as failed.](figures/jenkins_red.png){width=17cm}
 
-**Cluster state** after the deploy (`kubectl -n quakeloc get pods`):
+**Delivery.** The image reached Docker Hub under its commit SHA and `latest` (Figure 4), and the cluster runs two ready replicas (Figure 5). The API is documented at `/docs` (Figure 6). The web client (Figure 7) was added after build #1, so that capture is a local run of the commit that adds it.
 
-```text
-NAME                        READY   STATUS      RESTARTS   AGE
-quakeloc-57945b5df7-pmx4k   1/1     Running     0          5m25s
-quakeloc-57945b5df7-tzzvg   1/1     Running     0          5m41s
-quakeloc-smoke-6gcrg        0/1     Completed   0          5m19s
-```
++-------------------------------------------------+-------------------------------------------------+
+| ![](figures/jenkins_tests.png){width=7.8cm}     | ![](figures/dockerhub_tags.png){width=7.8cm}    |
+|                                                 |                                                 |
+| Figure 3. Test report, `main` build #1.         | Figure 4. Docker Hub tags.                      |
++-------------------------------------------------+-------------------------------------------------+
+| ![](figures/kubectl_pods.png){width=7.8cm}      | ![](figures/api_docs.png){width=7.8cm}          |
+|                                                 |                                                 |
+| Figure 5. `kubectl get pods,deploy` output.     | Figure 6. API documentation at `/docs`.         |
++-------------------------------------------------+-------------------------------------------------+
+| ![](figures/web_client.png){width=7.8cm}        | ![](figures/snr_sweep.png){width=7.8cm}         |
+|                                                 |                                                 |
+| Figure 7. Web client, local run.                | Figure 8. Synthetic SNR sweep, seed 42.         |
++-------------------------------------------------+-------------------------------------------------+
 
-+-----------------------------------------------+-----------------------------------------------+
-| ![](figures/dockerhub_tags.png){width=8.3cm}  | ![](figures/jenkins_tests.png){width=8.3cm}   |
-|                                               |                                               |
-| Figure 3. Docker Hub tags.                    | Figure 4. Jenkins test report.                |
-+-----------------------------------------------+-----------------------------------------------+
-| ![](figures/api_docs.png){width=8.3cm}        | ![](figures/snr_sweep.png){width=8.3cm}       |
-|                                               |                                               |
-| Figure 5. API documentation at `/docs`.       | Figure 6. Synthetic SNR sweep, seed 42.       |
-+-----------------------------------------------+-----------------------------------------------+
+**Science.** On synthetic data, recall rises from 0.89 at SNR 3 to 1.0 at SNR 5 and above, and mean location error falls from 1.54 km to 0.02 km (Figure 8). On real data all 4 events locate, at 2.8, 7.5, 12.2 and 18.3 km from the USGS epicentres (one response in Figure 9). Four events are a demonstration, not a statistical validation. The ellipses cover pick scatter only, so the USGS epicentre often lies outside them.
 
-![Figure 7. Response of `/events/usb000r68x/locate` from the Minikube deployment.](figures/api_locate.png){width=17cm}
-
-**Science.** On synthetic data, recall rises from 0.89 at SNR 3 to 1.0 at SNR 5 and above, and mean location error falls from 1.54 km to 0.02 km (Figure 6). On real data all 4 events locate, at 2.8, 7.5, 12.2 and 18.3 km from the USGS epicentres. Four events are a demonstration, not a statistical validation. The ellipses cover pick scatter only, so the USGS epicentre often lies outside them.
+![Figure 9. Response of `/events/usb000r68x/locate` from the Minikube deployment.](figures/api_locate.png){width=17cm}
 
 # 4. Difficulties
 
@@ -59,7 +56,6 @@ quakeloc-smoke-6gcrg        0/1     Completed   0          5m19s
 - **Stale artifacts.** The identity check failed locally after `src/` changed, because the artifacts were older than the code. Recalibrating fixed it, and the runbook now lists this case.
 - **Jenkins lost its network.** Recreating the container dropped its link to the Minikube network, so `make jenkins-up` now restores it.
 - **A test hid failures.** A stub's final `exit 0` masked simulated `kubectl` failures, so a commit went in with two failing tests. The next commit fixed the stub.
-- **Git on macOS.** `git push` hung on a keychain prompt; pushing through the GitHub CLI's credential helper solved it.
 
 # 5. Conclusions
 

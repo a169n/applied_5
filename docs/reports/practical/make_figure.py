@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 BLUE, INK, GRID = "#2a78d6", "#3b3b38", "#e4e3df"
 PANELS = [
-    ("recall", "Detection recall", None, "linear"),
-    ("loc_err_km", "Mean location error (km)", "loc_err_km", "log"),
+    ("recall", "Recall", None, "linear"),
+    ("loc_err_km", "Location error (km)", "loc_err_km", "log"),
 ]
 
 
@@ -19,13 +19,13 @@ def main(src: str, out: str) -> None:
     with open(src) as f:
         rows = list(csv.DictReader(f))
     snr = [float(r["snr"]) for r in rows]
-    plt.rcParams.update({"font.size": 9, "text.color": INK, "axes.labelcolor": INK})
-    fig, axes = plt.subplots(1, 2, figsize=(6.4, 2.0), layout="constrained")
+    plt.rcParams.update({"font.size": 8, "text.color": INK, "axes.labelcolor": INK})
+    fig, axes = plt.subplots(1, 2, figsize=(4.4, 2.0), layout="constrained")
     for ax, (col, title, label_col, yscale) in zip(axes, PANELS, strict=True):
         y = [float(r[col]) for r in rows]
         ax.plot(snr, y, color=BLUE, lw=2, marker="o", ms=5, mec="white", mew=1)
-        ax.set(xlabel="Signal-to-noise ratio", yscale=yscale)
-        ax.set_title(title, fontsize=9, loc="left")
+        ax.set(xlabel="SNR", yscale=yscale)
+        ax.set_title(title, fontsize=8, loc="left")
         ax.grid(axis="y", color=GRID, lw=0.8)
         ax.tick_params(colors=INK, length=0)
         for side in ("top", "right", "left"):
@@ -40,7 +40,7 @@ def main(src: str, out: str) -> None:
                 textcoords="offset points",
                 ha="right",
             )
-    fig.savefig(out, dpi=200)
+    fig.savefig(out, dpi=300)
 
 
 if __name__ == "__main__":

@@ -52,5 +52,7 @@ style("Author", spacing=1.0)
 style("Heading 1", bold=True, before=6)
 for name in ("Source Code", "Verbatim Char"):  # code needs a font every machine has
     if name in [s.name for s in doc.styles]:
-        doc.styles[name].font.name = "Courier New"
+        doc.styles[name].font.name, doc.styles[name].font.size = "Courier New", Pt(SIZE - 1.5)
+style("Image Caption", after=6)
+style("Captioned Figure", before=3)
 doc.save(OUT)

@@ -31,10 +31,15 @@ Read it before changing anything.
   header instead of a separate title page (unless the student says otherwise).
 - Project: **quakeloc**, hybrid data = synthetic (tests) + committed real snapshot of
   KNET (`KN`) waveforms with USGS catalog solutions + live-API refresh job.
-- Student's machine: **macOS** (Docker Desktop). Chip and RAM: *not yet provided*.
+- Student's machine: **MacBook Pro, Apple Silicon (arm64), 16 GB RAM**, macOS 26, Docker
+  Desktop, minikube v1.39.0 (Homebrew). Docker CLI is logged in to Docker Hub.
 - CD bonus: **yes**, Minikube (docker driver), deployed automatically by Jenkins.
-- Docker Hub push: **yes** — the student will create an account; username *not yet provided*.
+- Docker Hub push: **yes** — account and access token exist; ask the student for the
+  username (never ask for or store the token in the repo).
 - Theory report examples anchored in the project's domain (seismology / research software).
+- Design spec rev 2 **approved by the student on 2026-11-01**.
+- Development continues **on the Mac with Claude Code** ("variant B"); the cloud session
+  only produced the spec and this file.
 - `main` is the GitHub default branch. Feature work happens on branches and goes to
   `main` via PRs; Jenkins pushes/deploys only from `main`.
 
@@ -47,7 +52,7 @@ Read it before changing anything.
 | University, faculty | _pending_ |
 | Course name | _pending_ |
 | Instructor | _pending_ |
-| Mac chip / RAM | _pending_ |
+| Mac chip / RAM | Apple Silicon (arm64) / 16 GB |
 | Docker Hub username | _pending_ |
 | GitHub | `a169n` — repo https://github.com/a169n/applied_5 |
 
@@ -57,11 +62,11 @@ Read it before changing anything.
 |---|---|
 | Assignment analysed, project chosen (multi-agent idea selection) | done |
 | `main` created as default branch | done |
-| Design spec `docs/design/quakeloc-design.md` | rev 2 (independent 4-lens review, 34 verified fixes applied) — awaiting student review |
-| Implementation plan | not started (after spec approval) |
+| Design spec `docs/design/quakeloc-design.md` | rev 2 (independent 4-lens review, 34 verified fixes applied) — **approved 2026-11-01** |
+| Implementation plan | not started — **next step, on the Mac** |
 | Python package + tests | not started |
 | Dockerfile / Jenkins (JCasC) / k8s manifests / Makefile | not started |
-| Real-data snapshot `data/real/` | not started — **blocked in cloud** (see below) |
+| Real-data snapshot `data/real/` | not started (blocked in the cloud; fetch on the Mac) |
 | Theory report (3 pages) | not started |
 | RUNBOOK for macOS | not started |
 | Local run on Mac + screenshots | not started (student) |
@@ -109,11 +114,27 @@ GitHub. Consequences:
 
 ## Next steps
 
-1. Student reviews `docs/design/quakeloc-design.md` → approve or request changes.
-2. Write the implementation plan, then implement in this order: core science package +
-   tests → Dockerfile → Makefile → Jenkins (JCasC) → k8s → fetch tool → reports → RUNBOOK.
-3. On the Mac: follow `docs/RUNBOOK.md` (fetch real data, start Jenkins + Minikube,
-   run the pipeline, take screenshots), then finish the practical report.
+1. **On the Mac:** write the implementation plan from the approved spec (small,
+   test-first tasks; show it to the student before coding).
+2. Implement in this order: core science package + tests → Dockerfile → Makefile →
+   Jenkins (JCasC) → k8s → fetch tool + real snapshot (`make data`, APIs are reachable
+   on the Mac) → theory report → RUNBOOK.
+3. Bring up Minikube + Jenkins, get the pipeline green on `main` including the deploy,
+   take the screenshots, finish the practical report.
+
+## Mac environment notes (observed 2026-11-01)
+
+- Docker Desktop must be **running** before anything else (`open -a Docker`, wait until
+  `docker info` works). `minikube start` failed once only because the engine was not
+  started.
+- Docker Desktop → Settings → Resources → Memory: set **8 GB** (16 GB Mac). Then
+  `minikube start --driver=docker --memory=4g --cpus=2`.
+- `kubectl` had a stale context pointing at `127.0.0.1:62465` (an old cluster);
+  `minikube start` switches the current context to `minikube`. Check with
+  `kubectl config current-context`.
+- arm64 consequences: the `data` image compiles ObsPy from source (needs `gcc libc6-dev`,
+  takes a few minutes); images pushed from this Mac are arm64-only, which matches the
+  local Minikube node.
 
 ## Handoff prompt for Claude Code on the Mac
 

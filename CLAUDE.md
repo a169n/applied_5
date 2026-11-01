@@ -60,11 +60,11 @@ Read it before changing anything.
 | Design spec `docs/design/quakeloc-design.md` | rev 2 — approved by student 2026-11-01 |
 | Implementation plan | approved: `docs/superpowers/plans/2026-11-01-quakeloc.md`; native execution on branch `feat/quakeloc` |
 | Python package + tests | done on `feat/quakeloc` (fixture snapshot; real snapshot pending) |
-| Dockerfile / Makefile / Jenkins (JCasC) | done on `feat/quakeloc`; k8s in progress |
-| Real-data snapshot `data/real/` | not started — **blocked in cloud** (see below) |
-| Theory report (3 pages) | not started |
-| RUNBOOK for macOS | not started |
-| Local run on Mac + screenshots | not started (student) |
+| Dockerfile / Makefile / Jenkins (JCasC) / k8s | done on `feat/quakeloc`; deploy tested with a locally loaded image, Docker Hub push pending credentials |
+| Real-data snapshot `data/real/` | done: 4 events (archive gap; see `docs/RUNBOOK.md`), gates committed |
+| Theory report (3 pages) | done: `docs/reports/theory/` |
+| RUNBOOK for macOS | written: `docs/RUNBOOK.md` |
+| Local run on Mac + screenshots | Jenkins and Minikube running; green `main` needs merge approval and Docker Hub credentials |
 | Practical report (1–2 pages) | not started (needs screenshots) |
 
 ## Cloud-session limitations (why some work must happen on the Mac)

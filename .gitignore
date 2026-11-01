@@ -18,6 +18,8 @@ htmlcov/
 
 # Build outputs (anchored to the repo root so docs/reports/ is NOT ignored)
 /artifacts/
+/artifacts.second/
+/artifacts.baked/
 /reports/
 *.tar.gz
 

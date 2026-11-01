@@ -1,0 +1,28 @@
+services:
+  jenkins:
+    build: .
+    container_name: jenkins
+    # Root for access to the host Docker socket. Acceptable for a local single-user setup.
+    user: root
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      DOCKERHUB_USER: ${DOCKERHUB_USER:?set DOCKERHUB_USER in jenkins/.env}
+      KUBECONFIG: /kube/config
+    secrets:
+      - admin_password
+      - dockerhub_token
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./kubeconfig:/kube/config:ro
+
+secrets:
+  admin_password:
+    file: ./secrets/admin_password
+  dockerhub_token:
+    file: ./secrets/dockerhub_token
+
+volumes:
+  jenkins_home:

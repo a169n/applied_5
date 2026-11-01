@@ -1,0 +1,7 @@
+{
+  "max_median_mislocation_km": 14.801297295503945,
+  "max_rms_s": 0.39908225817936027,
+  "min_located_fraction": 1.0,
+  "rationale": "Derived from the first honest run: 1.5x the measured median mislocation and max RMS, and the measured located fraction. Change only with a new snapshot.",
+  "snapshot_hash": "f747e099929b6d19d8a8839bd04a4772b903c8432f01cf6469391af58e725569"
+}

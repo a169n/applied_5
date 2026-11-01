@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft rev 2 — for student review |
+| **Status** | Rev 2 — approved by the student on 2026-11-01 |
 | **Date** | 2026-10-31 |
 | **Repository** | https://github.com/a169n/applied_5 (default branch `main`) |
 | **Context** | Assignment 5 — *DevOps and CI/CD: Automating Processes for Research Projects* |
@@ -436,7 +436,7 @@ are guaranteed stable across versions (NEP 19).
 ## 13. Git workflow
 
 `main` is the default branch and always green. Work happens on feature branches
-(currently `claude/cool-curie-5vimra`), merged via pull requests after the pipeline is
+(currently `feat/quakeloc`), merged via pull requests after the pipeline is
 green. Only `main` pushes images and deploys. Release tag `v1.0.0` marks the submitted
 version.
 

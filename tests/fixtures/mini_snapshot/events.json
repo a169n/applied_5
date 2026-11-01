@@ -1,0 +1,132 @@
+[
+  {
+    "id": "synth0001",
+    "time": "2020-01-01T00:00:00Z",
+    "lat": 42.508038083697116,
+    "lon": 74.84099720121992,
+    "depth_km": 10.0,
+    "magnitude": 4.5,
+    "stations": [
+      {
+        "network": "XX",
+        "station": "AAA",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.30788279131125,
+        "lon": 74.05035903926633,
+        "elevation_m": 900
+      },
+      {
+        "network": "XX",
+        "station": "BBB",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.12873399612701,
+        "lon": 75.38630528302527,
+        "elevation_m": 1500
+      },
+      {
+        "network": "XX",
+        "station": "CCC",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.93652507305317,
+        "lon": 75.63988851997395,
+        "elevation_m": 700
+      },
+      {
+        "network": "XX",
+        "station": "DDD",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 43.16429618888914,
+        "lon": 74.5334100923434,
+        "elevation_m": 2100
+      },
+      {
+        "network": "XX",
+        "station": "EEE",
+        "location": "",
+        "channel": "BHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.84659938849194,
+        "lon": 73.92136194281306,
+        "elevation_m": 1200
+      },
+      {
+        "network": "XX",
+        "station": "FLT",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 41.905444905190684,
+        "lon": 74.90083351757058,
+        "elevation_m": 800
+      },
+      {
+        "network": "XX",
+        "station": "NAN",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.48592561039885,
+        "lon": 75.7556314561981,
+        "elevation_m": 800
+      }
+    ]
+  },
+  {
+    "id": "synth0002",
+    "time": "2020-01-01T00:00:00Z",
+    "lat": 42.68785358029428,
+    "lon": 74.65765306055957,
+    "depth_km": 10.0,
+    "magnitude": 4.5,
+    "stations": [
+      {
+        "network": "XX",
+        "station": "AAA",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.30788279131125,
+        "lon": 74.05035903926633,
+        "elevation_m": 900
+      },
+      {
+        "network": "XX",
+        "station": "BBB",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.12873399612701,
+        "lon": 75.38630528302527,
+        "elevation_m": 1500
+      },
+      {
+        "network": "XX",
+        "station": "CCC",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 42.93652507305317,
+        "lon": 75.63988851997395,
+        "elevation_m": 700
+      },
+      {
+        "network": "XX",
+        "station": "FLT",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 40.0,
+        "lat": 41.905444905190684,
+        "lon": 74.90083351757058,
+        "elevation_m": 800
+      }
+    ]
+  }
+]

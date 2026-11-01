@@ -1,0 +1,406 @@
+[
+  {
+    "id": "usb000r68x",
+    "time": "2014-05-28T02:25:59.670000Z",
+    "lat": 42.5547,
+    "lon": 74.816,
+    "depth_km": 9.92,
+    "magnitude": 4.2,
+    "azimuthal_gap_deg": 68.49625682882478,
+    "stations": [
+      {
+        "network": "KN",
+        "station": "AAK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.633301,
+        "lon": 74.4944,
+        "elevation_m": 1680.0
+      },
+      {
+        "network": "KN",
+        "station": "AML",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.1311,
+        "lon": 73.694099,
+        "elevation_m": 3400.0
+      },
+      {
+        "network": "KN",
+        "station": "CHM",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.9986,
+        "lon": 74.751297,
+        "elevation_m": 655.0
+      },
+      {
+        "network": "KN",
+        "station": "EKS2",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.661499,
+        "lon": 73.777199,
+        "elevation_m": 1360.0
+      },
+      {
+        "network": "KN",
+        "station": "KBK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.656399,
+        "lon": 74.9478,
+        "elevation_m": 1760.0
+      },
+      {
+        "network": "KN",
+        "station": "KZA",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.077801,
+        "lon": 75.249603,
+        "elevation_m": 3520.0
+      },
+      {
+        "network": "KN",
+        "station": "TKM2",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.920799,
+        "lon": 75.596603,
+        "elevation_m": 2020.0
+      },
+      {
+        "network": "KN",
+        "station": "UCH",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.227501,
+        "lon": 74.513397,
+        "elevation_m": 3850.0
+      },
+      {
+        "network": "KN",
+        "station": "ULHL",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.245602,
+        "lon": 76.241699,
+        "elevation_m": 2040.0
+      },
+      {
+        "network": "KN",
+        "station": "USP",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 43.266899,
+        "lon": 74.499702,
+        "elevation_m": 740.0
+      }
+    ]
+  },
+  {
+    "id": "usc000tiaa",
+    "time": "2015-01-22T15:52:30.710000Z",
+    "lat": 42.3624,
+    "lon": 74.9514,
+    "depth_km": 21.25,
+    "magnitude": 4.9,
+    "azimuthal_gap_deg": 150.99861491933473,
+    "stations": [
+      {
+        "network": "KN",
+        "station": "AAK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.633301,
+        "lon": 74.4944,
+        "elevation_m": 1680.0
+      },
+      {
+        "network": "KN",
+        "station": "AML",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.1311,
+        "lon": 73.694099,
+        "elevation_m": 3400.0
+      },
+      {
+        "network": "KN",
+        "station": "CHM",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.9986,
+        "lon": 74.751297,
+        "elevation_m": 655.0
+      },
+      {
+        "network": "KN",
+        "station": "EKS2",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.661499,
+        "lon": 73.777199,
+        "elevation_m": 1360.0
+      },
+      {
+        "network": "KN",
+        "station": "KBK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.656399,
+        "lon": 74.9478,
+        "elevation_m": 1760.0
+      },
+      {
+        "network": "KN",
+        "station": "TKM2",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.920799,
+        "lon": 75.596603,
+        "elevation_m": 2020.0
+      },
+      {
+        "network": "KN",
+        "station": "UCH",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.227501,
+        "lon": 74.513397,
+        "elevation_m": 3850.0
+      },
+      {
+        "network": "KN",
+        "station": "ULHL",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.245602,
+        "lon": 76.241699,
+        "elevation_m": 2040.0
+      },
+      {
+        "network": "KN",
+        "station": "USP",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 43.266899,
+        "lon": 74.499702,
+        "elevation_m": 740.0
+      }
+    ]
+  },
+  {
+    "id": "usb000m5vd",
+    "time": "2014-01-21T20:46:36.490000Z",
+    "lat": 42.0873,
+    "lon": 75.101,
+    "depth_km": 6.95,
+    "magnitude": 4.0,
+    "azimuthal_gap_deg": 178.00179077739364,
+    "stations": [
+      {
+        "network": "KN",
+        "station": "AAK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.633301,
+        "lon": 74.4944,
+        "elevation_m": 1680.0
+      },
+      {
+        "network": "KN",
+        "station": "AML",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.1311,
+        "lon": 73.694099,
+        "elevation_m": 3400.0
+      },
+      {
+        "network": "KN",
+        "station": "CHM",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.9986,
+        "lon": 74.751297,
+        "elevation_m": 655.0
+      },
+      {
+        "network": "KN",
+        "station": "EKS2",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.661499,
+        "lon": 73.777199,
+        "elevation_m": 1360.0
+      },
+      {
+        "network": "KN",
+        "station": "KBK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.656399,
+        "lon": 74.9478,
+        "elevation_m": 1760.0
+      },
+      {
+        "network": "KN",
+        "station": "KZA",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.077801,
+        "lon": 75.249603,
+        "elevation_m": 3520.0
+      },
+      {
+        "network": "KN",
+        "station": "UCH",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.227501,
+        "lon": 74.513397,
+        "elevation_m": 3850.0
+      },
+      {
+        "network": "KN",
+        "station": "ULHL",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.245602,
+        "lon": 76.241699,
+        "elevation_m": 2040.0
+      },
+      {
+        "network": "KN",
+        "station": "USP",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 43.266899,
+        "lon": 74.499702,
+        "elevation_m": 740.0
+      }
+    ]
+  },
+  {
+    "id": "usb000l53i",
+    "time": "2013-11-23T09:42:07.850000Z",
+    "lat": 42.5262,
+    "lon": 75.7113,
+    "depth_km": 9.76,
+    "magnitude": 4.9,
+    "azimuthal_gap_deg": 137.44757826858725,
+    "stations": [
+      {
+        "network": "KN",
+        "station": "AAK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.633301,
+        "lon": 74.4944,
+        "elevation_m": 1680.0
+      },
+      {
+        "network": "KN",
+        "station": "CHM",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.9986,
+        "lon": 74.751297,
+        "elevation_m": 655.0
+      },
+      {
+        "network": "KN",
+        "station": "KBK",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.656399,
+        "lon": 74.9478,
+        "elevation_m": 1760.0
+      },
+      {
+        "network": "KN",
+        "station": "KZA",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.077801,
+        "lon": 75.249603,
+        "elevation_m": 3520.0
+      },
+      {
+        "network": "KN",
+        "station": "TKM2",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.920799,
+        "lon": 75.596603,
+        "elevation_m": 2020.0
+      },
+      {
+        "network": "KN",
+        "station": "UCH",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.227501,
+        "lon": 74.513397,
+        "elevation_m": 3850.0
+      },
+      {
+        "network": "KN",
+        "station": "ULHL",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 42.245602,
+        "lon": 76.241699,
+        "elevation_m": 2040.0
+      },
+      {
+        "network": "KN",
+        "station": "USP",
+        "location": "",
+        "channel": "HHZ",
+        "sampling_rate": 100.0,
+        "lat": 43.266899,
+        "lon": 74.499702,
+        "elevation_m": 740.0
+      }
+    ]
+  }
+]

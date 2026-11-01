@@ -1,0 +1,15 @@
+{
+  "origin": {"lat": 42.58, "lon": 74.78},
+  "network": "KN",
+  "start": "2005-01-01",
+  "end": "2025-12-31",
+  "min_magnitude": 4.0,
+  "event_radius_km": 100.0,
+  "station_radius_km": 150.0,
+  "window_before_s": 60.0,
+  "window_after_s": 120.0,
+  "channels": ["HHZ", "BHZ"],
+  "min_stations": 6,
+  "max_azimuthal_gap_deg": 200.0,
+  "max_events": 10
+}

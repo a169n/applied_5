@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quakeloc"
+version = "1.0.0"
+description = "Earthquake detection, onset picking and epicentre location for the northern Tien Shan"
+requires-python = ">=3.12,<3.13"
+# Dependencies are pinned exactly in requirements*.txt, the single source of truth.
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    # Starlette's TestClient still works on the pinned httpx; only its future is deprecated.
+    "ignore:Using `httpx` with `starlette.testclient`",
+]
+markers = [
+    "science: scientific validation (statistical calibration, coverage, golden)",
+    "realdata: validation on the committed real KNET snapshot",
+]
+
+[tool.coverage.run]
+source = ["quakeloc"]
+omit = ["*/quakeloc/data/fetch.py"]
+
+[tool.coverage.paths]
+source = ["src/quakeloc", "*/site-packages/quakeloc"]

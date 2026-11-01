@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 import quakeloc
 from quakeloc.detect import SignalError
@@ -96,6 +96,10 @@ def create_app(artifacts=None, snapshot=None, config=None) -> FastAPI:
             return load_snapshot(snapshot)
         except SnapshotError as exc:
             raise HTTPException(503, f"snapshot failed verification: {exc}") from exc
+
+    @app.get("/", include_in_schema=False)
+    def web_client():
+        return FileResponse(Path(__file__).with_name("index.html"))
 
     @app.get("/health")
     def health():

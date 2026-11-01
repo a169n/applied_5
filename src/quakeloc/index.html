@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>quakeloc</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --ground: #e9edeb; --ink: #17262d; --muted: #52656b; --grid: #cfd8d6;
+          --ours: #c2281d; --usgs: #0b6a8a; --other: #84979a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink);
+         font: 16px/1.5 "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif; }
+  main { display: grid; grid-template-columns: 19rem minmax(0, 1fr); gap: 2.5rem;
+         max-width: 76rem; margin: auto; padding: 2.5rem 1.5rem; }
+  h1 { font-size: 1.75rem; line-height: 1.15; font-weight: 600; margin: 0 0 .5rem; }
+  p { margin: 0 0 1rem; max-width: 65ch; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  ul { list-style: none; margin: 1.5rem 0; padding: 0; }
+  li button { display: block; width: 100%; padding: .6rem .75rem; text-align: left; font: inherit;
+              color: inherit; background: none; border: 0; border-left: 3px solid var(--grid);
+              cursor: pointer; }
+  li button:hover { border-left-color: var(--muted); }
+  li button[aria-pressed="true"] { border-left-color: var(--ours); font-weight: 600; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--usgs); outline-offset: 2px; }
+  a { color: var(--usgs); }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-size: 12px; fill: var(--muted); }
+  .hit { cursor: pointer; }
+  .plot { position: relative; }
+  #tip { position: absolute; padding: .25rem .5rem; background: var(--ink); color: var(--ground);
+         font-size: .85rem; white-space: nowrap; pointer-events: none; transform: translate(-50%, -135%); }
+  #zoom { position: absolute; top: .5rem; right: .5rem; padding: .35rem .7rem; font: inherit; font-size: .9rem;
+          color: var(--ink); background: var(--ground); border: 1px solid var(--muted); cursor: pointer; }
+  #zoom:hover { background: var(--grid); }
+  .legend { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: .5rem 0 1.5rem; }
+  .legend svg { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: .3rem; }
+  dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem;
+       margin: 0 0 1.25rem; }
+  dt { color: var(--muted); font-size: .9rem; }
+  dd { margin: 0; font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+  @media (max-width: 52rem) {
+    main { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 1.5rem 1rem; }
+    svg text { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <section>
+    <h1>Earthquake locations near Bishkek</h1>
+    <p>Choose an earthquake here or on the map to locate it from KNET station recordings and compare the result with USGS.</p>
+    <ul id="events"></ul>
+    <p class="muted"><a href="/docs">API documentation</a><br><span id="build"></span></p>
+  </section>
+  <section aria-live="polite">
+    <div class="plot">
+      <svg id="map" viewBox="0 0 720 480" role="img" aria-label="Map of earthquake locations"></svg>
+      <button id="zoom" type="button" hidden>Zoom in</button>
+      <div id="tip" hidden></div>
+    </div>
+    <div class="legend muted">
+      <span><svg viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="#c2281d" stroke-width="2.5"/></svg>Our location</span>
+      <span><svg viewBox="0 0 16 16"><ellipse cx="8" cy="8" rx="4" ry="7" fill="none" stroke="#c2281d" stroke-width="1.5"/></svg>Our 95 % ellipse</span>
+      <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="#0b6a8a"/></svg>USGS location</span>
+      <span><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="4" fill="none" stroke="#84979a" stroke-width="1.5"/></svg>Other earthquakes (USGS)</span>
+    </div>
+    <p id="status"></p>
+    <dl id="numbers"></dl>
+    <p id="stations" class="muted"></p>
+    <p class="muted">The ellipse covers picking scatter only, not the one-layer velocity model or the depth
+      fixed at 10 km, so the USGS location can fall outside it. Results are for four earthquakes: a
+      demonstration, not a statistical validation.</p>
+  </section>
+</main>
+<script>
+const NS = "http://www.w3.org/2000/svg", W = 720, H = 480, KM_PER_DEG = 111.19;
+const INK = "#17262d", GRID = "#cfd8d6", OURS = "#c2281d", USGS = "#0b6a8a", OTHER = "#84979a";
+const $ = (id) => document.getElementById(id);
+const calm = matchMedia("(prefers-reduced-motion: reduce)");
+const state = { events: [], chosen: null, result: null, zoomed: false, view: null };
+let latestRequest = 0, latestAnimation = 0;
+
+function el(name, attrs, text) {
+  const node = document.createElementNS(NS, name);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (text) node.textContent = text;
+  return node;
+}
+
+async function getJson(path) {
+  const r = await fetch(path);
+  const body = await r.json().catch(() => null);
+  if (!r.ok) throw new Error(typeof body?.detail === "string" ? body.detail : `HTTP ${r.status}`);
+  return body;
+}
+
+const label = (e) => `${e.time.slice(0, 10)}, magnitude ${e.magnitude.toFixed(1)}`;
+const kmLon = (lat) => KM_PER_DEG * Math.cos(lat * Math.PI / 180);
+
+/* The view (centre and pixels per km) that fits the points with padKm around them. */
+function fit(points, padKm) {
+  const lats = points.map((q) => q.lat), lons = points.map((q) => q.lon);
+  const lat = (Math.min(...lats) + Math.max(...lats)) / 2, lon = (Math.min(...lons) + Math.max(...lons)) / 2;
+  const widthKm = (Math.max(...lons) - Math.min(...lons)) * kmLon(lat) + 2 * padKm;
+  const heightKm = (Math.max(...lats) - Math.min(...lats)) * KM_PER_DEG + 2 * padKm;
+  return { lat, lon, scale: Math.min(W / widthKm, H / heightKm) };
+}
+
+function targetView() {
+  if (!state.zoomed || !state.chosen) return fit(state.events, 30);
+  if (!state.result) return fit([state.chosen], 15);
+  return fit([state.chosen, state.result.located], Math.max(state.result.ellipse.a_km, 3) * 1.3);
+}
+
+/* Equirectangular projection; accurate enough over about 150 km. */
+function projection({ lat: lat0, lon: lon0, scale }) {
+  const k = kmLon(lat0);
+  return {
+    x: (lon) => W / 2 + (lon - lon0) * k * scale,
+    y: (lat) => H / 2 - (lat - lat0) * KM_PER_DEG * scale,
+    lon: (x) => lon0 + (x - W / 2) / (k * scale),
+    lat: (y) => lat0 - (y - H / 2) / (KM_PER_DEG * scale),
+  };
+}
+
+function drawGrid(map, p, scale) {
+  const stepsPerDeg = scale > 8 ? 10 : 2;  /* a 0.1 degree grid when zoomed in, else 0.5 */
+  for (let i = Math.ceil(p.lon(0) * stepsPerDeg); i / stepsPerDeg < p.lon(W); i++) {
+    const x = p.x(i / stepsPerDeg);
+    map.append(el("line", { x1: x, x2: x, y1: 0, y2: H, stroke: GRID }));
+    if (x < W - 60) map.append(el("text", { x: x + 4, y: H - 6 }, `${(i / stepsPerDeg).toFixed(1)}° E`));
+  }
+  for (let i = Math.ceil(p.lat(H) * stepsPerDeg); i / stepsPerDeg < p.lat(0); i++) {
+    const y = p.y(i / stepsPerDeg);
+    map.append(el("line", { x1: 0, x2: W, y1: y, y2: y, stroke: GRID }));
+    if (y > 50 && y < H - 30) map.append(el("text", { x: 4, y: y - 4 }, `${(i / stepsPerDeg).toFixed(1)}° N`));
+  }
+  const km = scale > 8 ? 5 : 20, bar = km * scale;
+  map.append(el("path", { d: `M12 16h${bar}`, stroke: INK, "stroke-width": 2 }));
+  map.append(el("text", { x: 12, y: 32 }, `${km} km`));
+}
+
+/* Mouse and touch shortcut to the event list, which stays the keyboard path. */
+function addHitTarget(map, p, event) {
+  const hit = el("circle", { class: "hit", cx: p.x(event.lon), cy: p.y(event.lat), r: 16, fill: "transparent" });
+  hit.addEventListener("click", () => select(event));
+  hit.addEventListener("mousemove", (m) => {
+    const box = $("map").parentElement.getBoundingClientRect();
+    $("tip").textContent = label(event);
+    $("tip").style.left = `${m.clientX - box.left}px`;
+    $("tip").style.top = `${m.clientY - box.top}px`;
+    $("tip").hidden = false;
+  });
+  hit.addEventListener("mouseleave", () => { $("tip").hidden = true; });
+  map.append(hit);
+}
+
+function draw() {
+  const map = $("map"), { view, chosen, result, events } = state, p = projection(view);
+  map.replaceChildren();
+  drawGrid(map, p, view.scale);
+  for (const e of events) {
+    if (e !== chosen) map.append(el("circle", { cx: p.x(e.lon), cy: p.y(e.lat), r: 5, fill: "none", stroke: OTHER, "stroke-width": 1.5 }));
+  }
+  if (result) {
+    const x = p.x(result.located.lon), y = p.y(result.located.lat), { a_km, b_km, azimuth_deg } = result.ellipse;
+    map.append(el("ellipse", { cx: x, cy: y, rx: b_km * view.scale, ry: a_km * view.scale,
+      transform: `rotate(${azimuth_deg} ${x} ${y})`, fill: OURS, "fill-opacity": 0.12, stroke: OURS, "stroke-width": 1.5 }));
+    map.append(el("line", { x1: p.x(chosen.lon), y1: p.y(chosen.lat), x2: x, y2: y, stroke: INK, "stroke-dasharray": "3 3" }));
+    map.append(el("path", { d: `M${x - 6} ${y - 6}l12 12M${x + 6} ${y - 6}l-12 12`, stroke: OURS, "stroke-width": 2.5 }));
+  }
+  if (chosen) map.append(el("circle", { cx: p.x(chosen.lon), cy: p.y(chosen.lat), r: 6, fill: USGS }));
+  for (const e of events) addHitTarget(map, p, e);
+}
+
+function moveView() {
+  const from = state.view, to = targetView(), animation = ++latestAnimation;
+  if (calm.matches || !from) { state.view = to; draw(); return; }
+  const start = performance.now();
+  requestAnimationFrame(function frame(now) {
+    if (animation !== latestAnimation) return;
+    const t = Math.min((now - start) / 450, 1), k = t * (2 - t);
+    state.view = { lat: from.lat + (to.lat - from.lat) * k, lon: from.lon + (to.lon - from.lon) * k,
+                   scale: from.scale * (to.scale / from.scale) ** k };
+    draw();
+    if (t < 1) requestAnimationFrame(frame);
+  });
+}
+
+function showNumbers(r) {
+  const rows = [
+    ["Distance from USGS", `${r.mislocation_km.toFixed(1)} km`],
+    ["Fit to arrival times (RMS)", `${r.located.rms_s.toFixed(2)} s`],
+    ["Origin time, relative to USGS", `${r.located.t0_s >= 0 ? "+" : "−"}${Math.abs(r.located.t0_s).toFixed(2)} s`],
+    ["95 % ellipse", `${r.ellipse.a_km.toFixed(1)} × ${r.ellipse.b_km.toFixed(1)} km`],
+  ];
+  $("numbers").replaceChildren(...rows.map(([name, value]) => {
+    const div = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd");
+    dt.textContent = name; dd.textContent = value; div.append(dt, dd);
+    return div;
+  }));
+  const out = [...Object.entries(r.rejected), ...Object.entries(r.skipped)].map(([s, why]) => `${s}: ${why}`);
+  $("stations").textContent = `Stations used (${r.used.length}): ${r.used.join(", ")}.` +
+    (out.length ? ` Left out: ${out.join("; ")}.` : "");
+}
+
+async function select(event) {
+  const request = ++latestRequest;
+  state.chosen = event;
+  state.result = null;
+  $("tip").hidden = true;
+  $("events").querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-pressed", state.events[i] === event));
+  moveView();
+  $("numbers").replaceChildren();
+  $("stations").textContent = "";
+  $("status").textContent = "Locating…";
+  try {
+    const result = await getJson(`/events/${encodeURIComponent(event.id)}/locate`);
+    if (request !== latestRequest) return;
+    state.result = result;
+    moveView();
+    $("status").textContent = `Magnitude ${event.magnitude.toFixed(1)}, ${event.time.slice(0, 10)}. USGS depth ${event.depth_km.toFixed(0)} km.`;
+    showNumbers(result);
+  } catch (err) {
+    if (request === latestRequest) $("status").textContent = `This earthquake could not be located: ${err.message}.`;
+  }
+}
+
+async function start() {
+  getJson("/version").then((v) => { $("build").textContent = `Build ${v.git_sha.slice(0, 7)}`; }).catch(() => {});
+  try {
+    state.events = await getJson("/events");
+  } catch (err) {
+    $("status").textContent = `The earthquake list did not load: ${err.message}. Reload the page to try again.`;
+    return;
+  }
+  if (!state.events.length) {
+    $("status").textContent = "This deployment has no earthquake data. Use the API documentation to locate your own picks.";
+    return;
+  }
+  state.events.sort((a, b) => a.time.localeCompare(b.time));
+  for (const event of state.events) {
+    const li = document.createElement("li"), button = document.createElement("button");
+    button.textContent = label(event);
+    button.addEventListener("click", () => select(event));
+    li.append(button);
+    $("events").append(li);
+  }
+  $("zoom").hidden = false;
+  $("zoom").addEventListener("click", () => {
+    state.zoomed = !state.zoomed;
+    $("zoom").textContent = state.zoomed ? "Show all earthquakes" : "Zoom in";
+    moveView();
+  });
+  select(state.events[0]);
+}
+
+start();
+</script>
+</body>
+</html>

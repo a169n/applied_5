@@ -192,6 +192,8 @@ practical report.
 | `GET /events/{id}/locate` | Real-data chain on one snapshot event: our solution vs USGS, mislocation km; 404 for unknown id or no snapshot |
 
 Interactive docs at `/docs` (Swagger UI) — useful for report screenshots.
+A minimal web client at `/` (`src/quakeloc/index.html`, no build step) shows `/events` and
+`/events/{id}/locate` on a map; added after the rev 2 approval at the student's request.
 
 ## 6. Repository layout
 

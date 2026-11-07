@@ -38,6 +38,11 @@ spec:
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10
+          lifecycle:
+            preStop:
+              # Keep serving while the Service stops routing here, so a rollout drops no requests.
+              sleep:
+                seconds: 5
           resources:
             requests:
               cpu: 100m

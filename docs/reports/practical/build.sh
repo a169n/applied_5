@@ -19,4 +19,7 @@ rm tmp.docx
 soffice --headless --convert-to pdf practical.docx > /dev/null
 pages=$(pdfinfo practical.pdf | awk '/^Pages:/ {print $2}')
 echo "pages=$pages"
-[ "$pages" -le 2 ]
+# The report is pages 1-2; Appendix A starts on page 3 after a page break.
+[ "$pages" -le 4 ]
+pdftotext -f 3 -l 3 practical.pdf - | grep -q 'Appendix A'
+! pdftotext -f 1 -l 2 practical.pdf - | grep -q 'Appendix A'

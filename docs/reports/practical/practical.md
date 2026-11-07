@@ -60,3 +60,79 @@ quakeloc detects earthquakes (STA/LTA), picks P-wave onsets (AIC) and locates ep
 # 5. Conclusions
 
 The pipeline turns a merge into a tested, published and deployed service without manual steps, and the red run shows that a scientific bug stops before release. The most useful decision was to test against known answers, since a generic smoke test would not have caught a sign error in the Jacobian. The main limits are the small real-data sample, the one-layer velocity model and a Jenkins instance that runs only on a laptop.
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+# Appendix A. Technical details
+
+This appendix is reference material. The report itself is pages 1 and 2.
+
+# A.1 Processing chain and API
+
+Waveforms from several stations pass through four steps: STA/LTA detection (`detect.py`), the ratio of a short-term to a long-term average amplitude, which jumps when a wave arrives; AIC onset picking (`pick.py`), which finds the sample that best splits the trace into noise and signal; Geiger's method with Levenberg–Marquardt damping (`locate.py`), which fits the epicentre and origin time to the picked arrival times; and a 95 % error ellipse from the pick scatter.
+
+| Endpoint | Purpose |
+|------------------------|--------------------------------------------------|
+| `GET /` | Web client: pick an event, compare our location with USGS |
+| `GET /docs` | Generated OpenAPI documentation |
+| `GET /health` | Process is alive (liveness probe) |
+| `GET /ready` | Detector loaded and built-in test earthquake located within 0.5 km (readiness probe) |
+| `GET /version` | Commit SHA, build number, artifact and snapshot hashes |
+| `POST /simulate`, `/pick`, `/locate` | Individual steps of the chain |
+| `GET /demo` | Full run on a synthetic event |
+| `GET /events`, `/events/{id}/locate` | Real KNET events and their location |
+
+# A.2 Docker image
+
+| Target | Contents and role |
+|-----------|---------------------------------------------------------------|
+| `deps` | Pinned dependencies built as wheels; base of every other target |
+| `test` | `deps` plus pytest, Hypothesis and Ruff; lint and tests run here, in the shipped environment |
+| `artifacts` | Runs the seeded calibration (`--seed 42`) and writes `detector.json` |
+| `data` | ObsPy fetch tool for the refresh job; compiles ObsPy from source on arm64 |
+| `runtime` | Code, calibration artifacts and the data snapshot only |
+
+The runtime image runs as uid 10001, has a `HEALTHCHECK` on `/health`, and carries OCI labels with the commit SHA, source URL and build date. The build metadata is the last layer, so it never invalidates the cache of the layers above.
+
+# A.3 Jenkins
+
+Jenkins `2.580.2-lts-jdk21` runs from `jenkins/docker-compose.yml`. Its 11 plugins are listed in `jenkins/plugins.txt`; `jenkins/casc.yaml` defines the admin user, the Docker Hub credential and, through Job DSL, the multibranch job with a 2-minute scan. Secrets live in gitignored files.
+
+| # | Stage | Command | Checks |
+|----|---------------------|----------------------|---------------------------------|
+| 1 | Checkout | `checkout scm` | Computes the commit SHA and image tag |
+| 2 | Build test image | `make image-test` | Test image builds |
+| 3 | Lint | `make lint` | Ruff lint and format |
+| 4 | Unit & property tests | `make test` | pytest and Hypothesis, coverage gate 80 % |
+| 5 | Scientific validation | `make calibrate science` | Calibration in two containers is byte-identical; synthetic accuracy |
+| 6 | Real-data validation | `make realdata` | 4 KNET events within committed limits; UNSTABLE if the snapshot is missing |
+| 7 | Build runtime image | `make image` | Baked calibration equals the tested one |
+| 8 | Container smoke test | `make smoke` | `/ready`, `/version`, `/`, `/demo` error under 1 km, `/events` |
+| 9 | Push to Docker Hub | `docker push` | `main` only; tags SHA and `latest`; logs out afterwards |
+| 10 | Deploy to Minikube | `k8s/deploy.sh` | `main` only; see A.4 |
+
+Stages 9 and 10 run only when the build result is SUCCESS, so an UNSTABLE build never ships. The `post` block always publishes the JUnit report and Cobertura coverage, archives the artifacts and cleans the workspace.
+
+# A.4 Kubernetes deployment
+
+| Manifest | Contents |
+|-----------------|-----------------------------------------------------------|
+| `namespace.yaml` | Namespace `quakeloc` |
+| `deployment.yaml` | 2 replicas; rolling update with `maxUnavailable: 0`, `maxSurge: 1`; liveness on `/health`, readiness on `/ready`; CPU and memory limits; non-root, read-only root filesystem; 5 s `preStop` sleep so a rollout drops no requests |
+| `service.yaml` | NodePort service, port 8000, node port 30080 |
+| `smoke-job.yaml` | Job that runs `quakeloc.smoke` against the service from inside the cluster |
+
+`k8s/deploy.sh` applies the manifests, waits for the rollout, then runs the smoke Job. If the rollout or the Job fails, it runs `kubectl rollout undo` and fails the build.
+
+# A.5 How to run
+
+```
+minikube start --driver=docker --memory=2200mb --cpus=2
+make jenkins-up                      # Jenkins at http://localhost:8080
+kubectl -n quakeloc get pods,deploy
+minikube service quakeloc -n quakeloc --url
+```
+
+The full procedure, including the one-time secrets setup, is in `docs/RUNBOOK.md`.
